@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Dict, Any
-from astar_baseline import astar_search, brute_force_search
+from astar_baseline import astar_search, brute_force_search, weighted_astar_search
 from heuristics import baseline_heuristic, tight_heuristic
 
 def run_correctness_test(products, query_embedding, k: int, lam: float = 0.30) -> Dict[str, Any]:
@@ -44,3 +44,46 @@ def run_scaling_experiment(products, query_embedding, sizes: List[int], k: int, 
             "tight_runtime_sec": tight["runtime_sec"],
         })
     return out
+
+
+'''m3'''
+
+def run_weighted_astar_experiment(
+    products,
+    query_embedding,
+    k: int,
+    weights,
+    heuristic_fn,
+    lam: float = 0.30,
+):
+    """
+    Compare Weighted A* across different weight values.
+    """
+    results = []
+
+    # Optimal baseline using regular A*
+    optimal = astar_search(products, query_embedding, k, heuristic_fn, lam=lam)
+    optimal_score = optimal["objective"]
+
+    for w in weights:
+        result = weighted_astar_search(
+            products,
+            query_embedding,
+            k,
+            heuristic_fn,
+            weight=w,
+            lam=lam,
+        )
+
+        optimality_gap = optimal_score - result["objective"]
+
+        results.append({
+            "weight": w,
+            "objective": result["objective"],
+            "optimal_objective": optimal_score,
+            "optimality_gap": optimality_gap,
+            "nodes_expanded": result["nodes_expanded"],
+            "runtime_sec": result["runtime_sec"],
+        })
+
+    return results
