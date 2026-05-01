@@ -242,7 +242,6 @@ This project demonstrates that:
 
 # 🔥 Final Note
 
-This project bridges theoretical heuristic search with practical e-commerce retrieval by combining exact optimization with scalable approximations.
+> This project bridges theoretical heuristic search with practical e-commerce retrieval by combining exact optimization with scalable approximations.
 
-
-
+---
