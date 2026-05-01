@@ -30,3 +30,14 @@ def load_products_csv(path: str) -> List[Product]:
 
 def filter_by_category(products: List[Product], category: str) -> List[Product]:
     return [p for p in products if p.category == category]
+
+def top_m_by_relevance(products, query_embedding, m, scoring_fn):
+    """
+    Select top-M products based on relevance to the query.
+    """
+    scored = sorted(
+        products,
+        key=lambda p: scoring_fn(p.embedding, query_embedding),
+        reverse=True,
+    )
+    return scored[:m]
